@@ -18,10 +18,10 @@ namespace EXAMINATION.Models
         public string CollegeAddress { get; set; } = null!;
 
         public int ProgramId { get; set; }
-        public Program Program { get; set; } = null!;
+       // public Program Program { get; set; } = null!;
 
         public int SemesterId { get; set; }
-        public Semester Semester { get; set; } = null!;
+        //public Semester Semester { get; set; } = null!;
         public ICollection<ElectiveSubject> ElectiveSubjects { get; set; } = new List<ElectiveSubject>();
 
          public ICollection<Application> Applications { get; set; } = new List<Application>();

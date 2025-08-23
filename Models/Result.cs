@@ -1,4 +1,5 @@
 ﻿using EXAMINATION.Models.Entities;
+using EXAMINATION.Models.Enum;
 
 namespace EXAMINATION.Models
 {
@@ -14,7 +15,7 @@ namespace EXAMINATION.Models
 
         public double MarksObtained { get; set; }
         public string Grade { get; set; } = null!;
-       // public ResultStatus Status { get; set; } = ResultStatus.Pending;
+        public ResultStatus Status { get; set; } = ResultStatus.Pending;
 
         public DateTime PublishedAt { get; set; } = DateTime.UtcNow;
     }

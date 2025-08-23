@@ -41,7 +41,7 @@ public class UserController : ControllerBase
     {
         var userEntity = new User()
         {
-            Id = addUserDto.Id,
+           // Id = addUserDto.Id,
             FirstName = addUserDto.FirstName,
             MiddleName = addUserDto.MiddleName,
             LastName = addUserDto.LastName,
@@ -49,7 +49,7 @@ public class UserController : ControllerBase
             Password = addUserDto.Password,
             PhoneNumber = addUserDto.PhoneNumber,
             PhotoUrl = addUserDto.PhotoUrl,
-            // Role =addUserDto.Role,
+            //Role =addUserDto.Role,
             StudentProfile = addUserDto.StudentProfile,
             CreatedAt = addUserDto.CreatedAt,
             UpdatedAt = addUserDto.CreatedAt,
@@ -60,7 +60,7 @@ public class UserController : ControllerBase
 
     }
 
-    [HttpPut]
+    [HttpPatch]
     [Route("{id:int}")]
     public IActionResult UpdateUser(int id,User updateUserDto)
 
@@ -71,15 +71,15 @@ public class UserController : ControllerBase
             return NotFound();
         }
         //student.Id = updateStudentDto.Id;
-        user.Id = updateUserDto.Id;
+        //user.Id = updateUserDto.Id;
         user.FirstName = updateUserDto.FirstName;
         user.MiddleName = updateUserDto.MiddleName;
         user.LastName = updateUserDto.LastName;
         user.Email = updateUserDto.Email;
         user.Password = updateUserDto.Password;
         user.PhoneNumber = updateUserDto.PhoneNumber;
-        user.PhotoUrl = updateUserDto.PhotoUrl;
-        // user.Role =updateUserDto.Role;
+        user.PhotoUrl = updateUserDto.PhotoUrl; 
+        user.Role =updateUserDto.Role;
         user.StudentProfile = updateUserDto.StudentProfile;
         user.CreatedAt = updateUserDto.CreatedAt;
         user.UpdatedAt = updateUserDto.CreatedAt;

@@ -60,10 +60,10 @@ namespace EXAMINATION.Controllers
                 CollegeAddress = addStudentDto.CollegeAddress,
 
                 ProgramId = addStudentDto.ProgramId,
-                Program = addStudentDto.Program,
+               // Program = addStudentDto.Program,
 
                 SemesterId = addStudentDto.SemesterId,
-                Semester = addStudentDto.Semester,
+                //Semester = addStudentDto.Semester,
                 ElectiveSubjects = addStudentDto.ElectiveSubjects,
 
                 Applications = addStudentDto.Applications,
@@ -77,7 +77,7 @@ namespace EXAMINATION.Controllers
             return Ok(studentEntity);
 
         }
-        [HttpPut]
+        [HttpPatch]
         [Route("{id:int}")]
         public IActionResult UpdateStudent(int id,UpdateStudentDto updateStudentDto )
 
@@ -99,7 +99,7 @@ namespace EXAMINATION.Controllers
             student.CollegeAddress = updateStudentDto.CollegeAddress;
             student.ProgramId = updateStudentDto.ProgramId;
             student.SemesterId = updateStudentDto.SemesterId;
-            student.Semester = updateStudentDto.Semester;
+          //  student.Semester = updateStudentDto.Semester;
             student.ElectiveSubjects = updateStudentDto.ElectiveSubjects;
             student.Applications=updateStudentDto.Applications;
             student.Payments=updateStudentDto.Payments;

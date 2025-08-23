@@ -3,6 +3,7 @@ using System;
 using EXAMINATION.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EXAMINATION.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250815164713_ThirdCreate")]
+    partial class ThirdCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,26 +24,6 @@ namespace EXAMINATION.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("EXAMINATION.Models.AcademicProgram", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Fee")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Programs");
-                });
 
             modelBuilder.Entity("EXAMINATION.Models.Application", b =>
                 {
@@ -76,7 +59,7 @@ namespace EXAMINATION.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Applications");
+                    b.ToTable("Application");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.Course", b =>
@@ -230,6 +213,26 @@ namespace EXAMINATION.Migrations
                     b.ToTable("Payment");
                 });
 
+            modelBuilder.Entity("EXAMINATION.Models.Program", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Fee")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Program");
+                });
+
             modelBuilder.Entity("EXAMINATION.Models.Result", b =>
                 {
                     b.Property<int>("Id")
@@ -288,7 +291,7 @@ namespace EXAMINATION.Migrations
 
                     b.HasIndex("ProgramId");
 
-                    b.ToTable("Semesters");
+                    b.ToTable("Semester");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.User", b =>
@@ -394,7 +397,7 @@ namespace EXAMINATION.Migrations
 
             modelBuilder.Entity("EXAMINATION.Models.Entities.StudentProfile", b =>
                 {
-                    b.HasOne("EXAMINATION.Models.AcademicProgram", "Program")
+                    b.HasOne("EXAMINATION.Models.Program", "Program")
                         .WithMany("Students")
                         .HasForeignKey("ProgramId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -455,20 +458,13 @@ namespace EXAMINATION.Migrations
 
             modelBuilder.Entity("EXAMINATION.Models.Semester", b =>
                 {
-                    b.HasOne("EXAMINATION.Models.AcademicProgram", "Program")
+                    b.HasOne("EXAMINATION.Models.Program", "Program")
                         .WithMany("Semesters")
                         .HasForeignKey("ProgramId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Program");
-                });
-
-            modelBuilder.Entity("EXAMINATION.Models.AcademicProgram", b =>
-                {
-                    b.Navigation("Semesters");
-
-                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.Course", b =>
@@ -485,6 +481,13 @@ namespace EXAMINATION.Migrations
                     b.Navigation("Payments");
 
                     b.Navigation("Results");
+                });
+
+            modelBuilder.Entity("EXAMINATION.Models.Program", b =>
+                {
+                    b.Navigation("Semesters");
+
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.Semester", b =>

@@ -1,5 +1,6 @@
 ﻿using EXAMINATION.Models.Entities;
 using System.Data;
+using EXAMINATION.Models.Enum;
 
 namespace EXAMINATION.Models
 {
@@ -13,7 +14,7 @@ namespace EXAMINATION.Models
         public string Password { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
         public string? PhotoUrl { get; set; }
-        //public Role Role { get; set; } = Role.Student;
+        public Role Role { get; set; } = Role.Student;
         public StudentProfile? StudentProfile { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

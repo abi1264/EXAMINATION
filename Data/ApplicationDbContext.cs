@@ -11,5 +11,10 @@ namespace EXAMINATION.Data
         }
         public DbSet<StudentProfile> Students { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Application> Applications { get; set; }
+        
+        public DbSet<Semester> Semesters { get; set; }
+        public DbSet<AcademicProgram> Programs { get; set; }
     }
+
 }
