@@ -4,6 +4,8 @@ using EXAMINATION.Data;
 using Microsoft.EntityFrameworkCore;
 using EXAMINATION.Models;
 using EXAMINATION.Models.Enum;
+using EXAMINATION.Mappers;
+using EXAMINATION.Models.DTO;
 
 namespace EXAMINATION.Controllers
 {
@@ -44,34 +46,23 @@ namespace EXAMINATION.Controllers
         [HttpPost]
         public IActionResult AddProgramData(AcademicProgram addProgramData)
         {
-            var program = new AcademicProgram()
-            {
-                //Id = addProgramData.Id,
-                Name = addProgramData.Name,
-                Fee = addProgramData.Fee,
-                Semesters = addProgramData.Semesters,
-                //Students = addProgramData.Students
-
-            };
-            dbContext.Programs.Add(program);
+           
+            dbContext.Programs.Add(addProgramData);
             dbContext.SaveChanges();
-            return Ok(program);
+            return Ok(addProgramData);
         }
 
         [HttpPatch]
         [Route("{id:int}")]
-        public IActionResult UpdatePrograms(int id, AcademicProgram updateProgramData)
+        public IActionResult UpdatePrograms(int id, AcademicProgramDto updateProgramData)
         {
             var program = dbContext.Programs.Find(id);
             if(program is null)
             {
                 return NotFound();
             }
-           // program.Id = updateProgramData.Id;
-            program.Name = updateProgramData.Name;
-            program.Fee = updateProgramData.Fee;
-           // program.Students = updateProgramData.Students;
 
+            AcademicProgramMapper.ApplyPatch(updateProgramData, program);
             dbContext.Programs.Update(program);
             return Ok(program);
 

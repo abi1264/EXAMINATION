@@ -4,6 +4,8 @@ using EXAMINATION.Data;
 using Microsoft.EntityFrameworkCore;
 using EXAMINATION.Models;
 using EXAMINATION.Models.Enum;
+using EXAMINATION.Models.DTO;
+using EXAMINATION.Mappers;
 
 
 namespace EXAMINATION.Controllers
@@ -43,29 +45,16 @@ namespace EXAMINATION.Controllers
         [HttpPost]
         public IActionResult AddApplicationData(Application addApplicationData)
         {
-            var application = new Application()
-            {
-
-                Id = addApplicationData.Id,
-                UserId = addApplicationData.UserId,
-               // User = addApplicationData.User,
-                SemesterId = addApplicationData.SemesterId,
-               // Semester = addApplicationData.Semester,
-                ExamType = addApplicationData.ExamType,
-                Status = addApplicationData.Status,
-               // CreatedAt = addApplicationData.CreatedAt
-
-
-            };
-            dbContext.Applications.Add(application);
+           
+            dbContext.Applications.Add(addApplicationData);
             dbContext.SaveChanges();
 
-            return Ok(application);
+            return Ok(addApplicationData);
 
         }
         [HttpPatch]
         [Route("{id:int}")]
-        public IActionResult UpdateApplication(int id, Application updateApplicationData)
+        public IActionResult UpdateApplication(int id, ApplicationDto updateApplicationData)
         {
             var application = dbContext.Applications.Find(id);
 
@@ -74,15 +63,7 @@ namespace EXAMINATION.Controllers
             {
                 return NotFound();
             }
-
-            application.Id = updateApplicationData.Id;
-            application.UserId = updateApplicationData.UserId;
-            application.User = updateApplicationData.User;
-            application.SemesterId = updateApplicationData.SemesterId;
-            application.Semester = updateApplicationData.Semester;
-            application.ExamType = updateApplicationData.ExamType;
-            application.Status = updateApplicationData.Status;
-            application.CreatedAt = updateApplicationData.CreatedAt;
+            ApplicationMapper.ApplyPatch(updateApplicationData, application);
 
             dbContext.SaveChanges();
             return Ok(application);

@@ -1,17 +1,11 @@
-﻿using EXAMINATION.Models.DTO;
-
-namespace EXAMINATION.Models
+﻿namespace EXAMINATION.Models.DTO
 {
-    public class AcademicProgram
+    public class AcademicProgramDto
     {
-        public int Id { get; set; }
         public string Name { get; set; } = null!;
         public double Fee { get; set; }
 
         public ICollection<Semester> Semesters { get; set; } = new List<Semester>();
         public ICollection<StudentProfile> Students { get; set; } = new List<StudentProfile>();
-
     }
-
-
 }

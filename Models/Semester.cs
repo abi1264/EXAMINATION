@@ -1,4 +1,4 @@
-﻿using EXAMINATION.Models.Entities;
+﻿using EXAMINATION.Models.DTO;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace EXAMINATION.Models

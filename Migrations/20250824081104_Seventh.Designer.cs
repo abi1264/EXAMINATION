@@ -3,6 +3,7 @@ using System;
 using EXAMINATION.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EXAMINATION.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250824081104_Seventh")]
+    partial class Seventh
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,7 +111,7 @@ namespace EXAMINATION.Migrations
 
                     b.HasIndex("SemesterId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Course");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.ElectiveSubject", b =>
@@ -134,7 +137,7 @@ namespace EXAMINATION.Migrations
 
                     b.HasIndex("StudentProfileId");
 
-                    b.ToTable("Electives");
+                    b.ToTable("ElectiveSubject");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.Entities.StudentProfile", b =>
@@ -227,7 +230,7 @@ namespace EXAMINATION.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.Result", b =>
@@ -263,7 +266,7 @@ namespace EXAMINATION.Migrations
 
                     b.HasIndex("StudentProfileId");
 
-                    b.ToTable("Results");
+                    b.ToTable("Result");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.Semester", b =>

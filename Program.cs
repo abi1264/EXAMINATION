@@ -11,6 +11,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+////For using the JsonPatchDocument
+//builder.Services.AddControllers()
+//    .AddNewtonsoftJson(options =>
+//    {
+//        options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+//        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+//    });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

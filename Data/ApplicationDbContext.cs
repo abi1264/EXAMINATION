@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using EXAMINATION.Models.Entities;
+using EXAMINATION.Models.DTO;
 using EXAMINATION.Models;
 namespace EXAMINATION.Data
 {
@@ -15,6 +15,12 @@ namespace EXAMINATION.Data
         
         public DbSet<Semester> Semesters { get; set; }
         public DbSet<AcademicProgram> Programs { get; set; }
+        public DbSet<Course>Courses { get; set; }
+        public DbSet<Result> Results { get; set; }
+
+        public DbSet<ElectiveSubject> Electives { get; set; }
+
+        public DbSet<Payment> Payments { get; set; }
     }
 
 }

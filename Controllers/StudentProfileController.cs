@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using EXAMINATION.Data;
 using EXAMINATION.Models;
-using EXAMINATION.Models.Entities;
+using EXAMINATION.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EXAMINATION.Models.Enum;
-//using EXAMINATION.Models.Entities;
+using EXAMINATION.Mappers;
+
 
 namespace EXAMINATION.Controllers
 {
@@ -41,7 +42,7 @@ namespace EXAMINATION.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddStudent(AddStudentDto addStudentDto)
+        public IActionResult AddStudent(StudentProfile addStudentDto)
         {
             var studentEntity = new StudentProfile()
             {
@@ -79,33 +80,15 @@ namespace EXAMINATION.Controllers
         }
         [HttpPatch]
         [Route("{id:int}")]
-        public IActionResult UpdateStudent(int id,UpdateStudentDto updateStudentDto )
+        public IActionResult UpdateStudent(int id, StudentDto updateStudentDto)
 
         {
             var student = dbContext.Students.Find(id);
-            if(student is null)
+            if (student is null)
             {
                 return NotFound();
             }
-           // student.Id = updateStudentDto.Id;
-            student.UserId = updateStudentDto.UserId;
-            student.Signature = updateStudentDto.Signature;
-            student.FatherName = updateStudentDto.FatherName;
-            student.MotherName = updateStudentDto.MotherName;
-            student.Gender = updateStudentDto.Gender;
-            student.MaritalStatus = updateStudentDto.MaritalStatus;
-            student.DateOfBirth = updateStudentDto.DateOfBirth;
-            student.CollegeName = updateStudentDto.CollegeName;
-            student.CollegeAddress = updateStudentDto.CollegeAddress;
-            student.ProgramId = updateStudentDto.ProgramId;
-            student.SemesterId = updateStudentDto.SemesterId;
-          //  student.Semester = updateStudentDto.Semester;
-            student.ElectiveSubjects = updateStudentDto.ElectiveSubjects;
-            student.Applications=updateStudentDto.Applications;
-            student.Payments=updateStudentDto.Payments;
-            student.Results=updateStudentDto.Results;
-
-
+            StudentMapper.ApplyPatch(updateStudentDto, student); //using mapper class
             dbContext.SaveChanges();
             return Ok(student);
         }

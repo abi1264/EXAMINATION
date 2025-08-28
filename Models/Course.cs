@@ -10,7 +10,7 @@ namespace EXAMINATION.Models
         public int Credit { get; set; }
 
         public int SemesterId { get; set; }
-        public Semester Semester { get; set; } = null!;
+        public Semester? Semester { get; set; } = null!;
         public ICollection<Result> Results { get; set; } = new List<Result>();
 
     }

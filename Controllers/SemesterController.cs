@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using EXAMINATION.Models;
 using EXAMINATION.Models.Enum;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using EXAMINATION.Mappers;
+using EXAMINATION.Models.DTO;
 
 
 namespace EXAMINATION.Controllers
@@ -43,42 +45,24 @@ namespace EXAMINATION.Controllers
         [HttpPost]
         public IActionResult AddSemesterData(Semester addSemesterData)
         {
-            var semester = new Semester()
-            {
-                Id = addSemesterData.Id,
-                Name = addSemesterData.Name,
-                Fee = addSemesterData.Fee,
-                ProgramId = addSemesterData.ProgramId,
-                //Program = addSemesterData.Program,
-                //Courses = addSemesterData.Courses,
-                //Students = addSemesterData.Students,
-                //Applications = addSemesterData.Applications
-
-            };
-            dbContext.Semesters.Add(semester);
+           
+            dbContext.Semesters.Add(addSemesterData);
             dbContext.SaveChanges();
-            return Ok(semester);
+            return Ok(addSemesterData);
         }
 
         [HttpPatch]
 
         [Route("{id:int}")]
-        public IActionResult UpdateSemester(int id, Semester updateSemester)
+        public IActionResult UpdateSemester(int id, SemesterDto updateSemester)
         {
         var semester = dbContext.Semesters.Find(id);
         if (semester is null)
         {
             return NotFound();
         }
-            semester.Id = updateSemester.Id;
-            semester.Name = updateSemester.Name;
-            semester.Fee = updateSemester.Fee;
-            semester.ProgramId = updateSemester.ProgramId;
-            //semester.Program = updateSemester.Program;
-           // semester.Courses = updateSemester.Courses;
-            //semester.Students = updateSemester.Students;
-            //semester.Applications = updateSemester.Applications;
 
+            SemesterMapper.ApplyPatch(updateSemester, semester);
             dbContext.SaveChanges();
             return Ok(semester);
 
