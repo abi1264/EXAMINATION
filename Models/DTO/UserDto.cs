@@ -11,11 +11,9 @@ namespace EXAMINATION.Models.DTO
         public string? Password { get; set; } 
         public string? PhoneNumber { get; set; } 
         public string? PhotoUrl { get; set; } 
-        public Role Role { get; set; } = Role.Student;
+        public Role? Role { get; set; } 
 
-        // public int a {get ;set ;} = 1;
-        // int allows Role.length() startin from 0  
-        public StudentProfile? StudentProfile { get; set; }
+        public StudentDto? StudentProfile { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         
     }

@@ -25,10 +25,7 @@ namespace EXAMINATION.Mappers
             {
                 payment.TransactionId = updatePayment.TransactionId;
             }
-            if (updatePayment.CreatedAt != null)
-            {
-                payment.CreatedAt = updatePayment.CreatedAt.Value;
-            }
+            
         }
     }
 }

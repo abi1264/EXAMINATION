@@ -9,7 +9,7 @@ namespace EXAMINATION.Models
         public int Id { get; set; }
             [Required]
             public string Name { get; set; } = string.Empty;
-        [Required]
+             [Required]
         
         public double Fee { get; set; }
 

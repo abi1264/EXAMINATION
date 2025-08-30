@@ -48,10 +48,10 @@ public class UserController : ControllerBase
 
     [HttpPatch]
     [Route("{id:int}")]
-    public IActionResult UpdateUser(int id, UserDto updateUserDto)
+    public async Task<IActionResult>UpdateUser(int id, UserDto updateUserDto)
 
     {
-        var user = dbContext.Users.Find(id);
+        var user =await dbContext.Users.Include(u => u.StudentProfile).FirstOrDefaultAsync(u => u.Id == id);
         if (user is null)
         {
             return NotFound();
