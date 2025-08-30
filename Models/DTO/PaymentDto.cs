@@ -11,6 +11,6 @@ namespace EXAMINATION.Models.DTO
         public PaymentStatus? Status { get; set; }
         public string? TransactionId { get; set; } 
 
-        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

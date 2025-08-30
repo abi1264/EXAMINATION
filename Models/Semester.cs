@@ -1,14 +1,18 @@
 ﻿using EXAMINATION.Models.DTO;
+using System.ComponentModel.DataAnnotations;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace EXAMINATION.Models
 {
     public class Semester
     {
+        [Key]
         public int Id { get; set; }
-        public string Name { get; set; } = null!;
+        [Required]
+        public string Name { get; set; } = string.Empty;
+        [Required]
         public double Fee { get; set; }
-
+        [Required]
         public int ProgramId { get; set; }
         public AcademicProgram? Program { get; set; } 
 

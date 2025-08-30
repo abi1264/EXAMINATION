@@ -10,15 +10,20 @@ namespace EXAMINATION.Models
     public class User
     {
         [Key]
-
         public int Id { get; set; }
-        public string FirstName { get; set; } = String.Empty;
-        public string? MiddleName { get; set; } = String.Empty;
-        public string LastName { get; set; } = String.Empty;
-        public string Email { get; set; } = null!;
-        public string Password { get; set; } = null!;
-        public string PhoneNumber { get; set; } = null!;
-        public string? PhotoUrl { get; set; }
+        [Required]
+        public string FirstName { get; set; } = string.Empty;
+
+        public string MiddleName { get; set; } = String.Empty;
+        [Required]
+        public string LastName { get; set; } = string.Empty;
+        [Required]
+        public string Email { get; set; } = string.Empty;
+        [Required]
+        public string Password { get; set; } = string.Empty;
+        [Required]
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string PhotoUrl = String.Empty;
         public Role Role { get; set; } = Role.Student;
         public StudentProfile?  StudentProfile { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -6,14 +6,14 @@ namespace EXAMINATION.Mappers
     {
         static public void ApplyPatch(AcademicProgramDto updateAcademic, AcademicProgram academic)
         {
-            if (updateAcademic.Name != null)
+            if (string.IsNullOrEmpty(updateAcademic.Name))
             {
                 academic.Name = updateAcademic.Name;
                 
             }
             if (updateAcademic.Fee!= null)
             {
-                academic.Fee = updateAcademic.Fee;
+                academic.Fee = updateAcademic.Fee.Value;
             }
 
         }

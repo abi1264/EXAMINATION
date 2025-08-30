@@ -5,22 +5,17 @@ namespace EXAMINATION.Mappers
 {
     static public class ElectiveSubjectMapper
     {
-        static public void ApplyPatch(ElectiveSubjectDto updateElectiveData,ElectiveSubject elective)
+        static public void ApplyPatch(ElectiveSubjectDto updateElectiveData, ElectiveSubject elective)
         {
             if (updateElectiveData.StudentProfileId != null)
             {
-                elective.StudentProfileId = updateElectiveData.StudentProfileId;
+                elective.StudentProfileId = updateElectiveData.StudentProfileId.Value;
             }
             if (updateElectiveData.CourseId != null)
             {
-
-                elective.CourseId = updateElectiveData.CourseId;
+                elective.CourseId = updateElectiveData.CourseId.Value;
             }
-            if (updateElectiveData.ChosenAt != null)
-            {
-                elective.ChosenAt = updateElectiveData.ChosenAt;
-            }
-
+            elective.ChosenAt = updateElectiveData.ChosenAt;
         }
     }
-}
+}   
