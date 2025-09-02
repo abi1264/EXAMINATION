@@ -19,12 +19,7 @@ namespace EXAMINATION.Mappers
             if (updateSemester.ProgramId != null)
             {
                 semester.ProgramId = updateSemester.ProgramId.Value;
-            }
-            if (updateSemester.Courses != null)
-            {
-                semester.Courses = updateSemester.Courses;
-            }
-            
+            } 
         }
     }
 }

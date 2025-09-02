@@ -45,7 +45,7 @@ namespace EXAMINATION.Controllers
         [HttpPost]
         public IActionResult AddCourseData(Course addCourseData)
         {
-           
+
             dbContext.Courses.Add(addCourseData);
             dbContext.SaveChanges();
             return Ok(addCourseData);
@@ -55,7 +55,7 @@ namespace EXAMINATION.Controllers
         [HttpPatch]
         [Route("{id:int}")]
 
-        public IActionResult UpdateCourseData(int id,CourseDto updateCourseData)
+        public IActionResult UpdateCourseData(int id, CourseDto updateCourseData)
         {
             var course = dbContext.Courses.Find(id);
             if (course is null)
@@ -69,10 +69,11 @@ namespace EXAMINATION.Controllers
         }
 
         [HttpDelete]
+        [Route("{id:int}")]
         public IActionResult DeleteCourseData(int id)
         {
             var course = dbContext.Courses.Find(id);
-            if(course is null)
+            if (course is null)
             {
                 return NotFound();
             }

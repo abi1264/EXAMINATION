@@ -2,6 +2,7 @@
 using static System.Net.Mime.MediaTypeNames;
 using EXAMINATION.Models.Enum;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace EXAMINATION.Models
 {
@@ -11,6 +12,7 @@ namespace EXAMINATION.Models
         public int Id { get; set; }
         [Required]
         public  int UserId { get; set; }
+        [JsonIgnore]
         public User? User { get; set; }
         [Required]
         public string Signature { get; set; } = string.Empty;

@@ -9,9 +9,12 @@ namespace EXAMINATION.Mappers
             if (string.IsNullOrEmpty(updateAcademic.Name))
             {
                 academic.Name = updateAcademic.Name;
-                
             }
-            if (updateAcademic.Fee!= null)
+            if (string.IsNullOrEmpty(updateAcademic.Name))
+            {
+                academic.Degree = updateAcademic.Degree;
+            }
+            if (updateAcademic.Fee != null)
             {
                 academic.Fee = updateAcademic.Fee.Value;
             }
