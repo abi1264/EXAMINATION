@@ -1,5 +1,6 @@
 ﻿using EXAMINATION.Models.Enum;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 namespace EXAMINATION.Models
 {
     public class Course
@@ -17,6 +18,9 @@ namespace EXAMINATION.Models
         [Required]
 
         public int SemesterId { get; set; }
+
+        [JsonIgnore]
+
         public Semester? Semester { get; set; }
         public ICollection<Result> Results { get; set; } = new List<Result>();
 

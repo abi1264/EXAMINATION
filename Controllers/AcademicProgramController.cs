@@ -11,11 +11,11 @@ namespace EXAMINATION.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
-    
+
     public class AcademicProgramController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
-        
+
         public AcademicProgramController(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
@@ -23,9 +23,9 @@ namespace EXAMINATION.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetProgramData()
+        public async Task<IActionResult> GetProgramData()
         {
-            var programData = dbContext.Programs.ToList();
+            var programData = await dbContext.Programs.Include(program => program.Semesters).ToListAsync();
             return Ok(programData);
         }
 
@@ -35,7 +35,7 @@ namespace EXAMINATION.Controllers
         public IActionResult GetProgramById(int id)
         {
             var programData = dbContext.Programs.Find(id);
-            if(programData is null)
+            if (programData is null)
             {
                 return NotFound();
 
@@ -44,10 +44,10 @@ namespace EXAMINATION.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddProgramData(AcademicProgram addProgramData)
+        public async Task<IActionResult> AddProgramData(AcademicProgram addProgramData)
         {
-           
-            dbContext.Programs.Add(addProgramData);
+
+            await dbContext.Programs.AddAsync(addProgramData);
             dbContext.SaveChanges();
             return Ok(addProgramData);
         }
@@ -57,7 +57,7 @@ namespace EXAMINATION.Controllers
         public IActionResult UpdatePrograms(int id, AcademicProgramDto updateProgramData)
         {
             var program = dbContext.Programs.Find(id);
-            if(program is null)
+            if (program is null)
             {
                 return NotFound();
             }
@@ -73,7 +73,7 @@ namespace EXAMINATION.Controllers
         public IActionResult DeleteProgram(int id)
         {
             var program = dbContext.Programs.Find(id);
-            if(program is null)
+            if (program is null)
             {
                 return NotFound();
             }
@@ -85,6 +85,6 @@ namespace EXAMINATION.Controllers
 
     }
 
- 
+
 
 }

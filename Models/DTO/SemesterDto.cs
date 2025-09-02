@@ -6,7 +6,7 @@
         public double? Fee { get; set; }
 
         public int? ProgramId { get; set; }
-        public ICollection<Course>Courses { get; set; } = new List<Course>();
+        public ICollection<CourseDto>Courses { get; set; } = new List<CourseDto>();
        
     }
 }

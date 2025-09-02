@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EXAMINATION.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250815134427_SecondCreate")]
-    partial class SecondCreate
+    [Migration("20250831142157_Init-all-tables")]
+    partial class Initalltables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,30 @@ namespace EXAMINATION.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("EXAMINATION.Models.AcademicProgram", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Degree")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Fee")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Programs");
+                });
 
             modelBuilder.Entity("EXAMINATION.Models.Application", b =>
                 {
@@ -36,7 +60,13 @@ namespace EXAMINATION.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("ExamType")
+                        .HasColumnType("integer");
+
                     b.Property<int>("SemesterId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<int?>("StudentProfileId")
@@ -53,7 +83,7 @@ namespace EXAMINATION.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Application");
+                    b.ToTable("Applications");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.Course", b =>
@@ -78,11 +108,14 @@ namespace EXAMINATION.Migrations
                     b.Property<int>("SemesterId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SemesterId");
 
-                    b.ToTable("Course");
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.ElectiveSubject", b =>
@@ -108,10 +141,106 @@ namespace EXAMINATION.Migrations
 
                     b.HasIndex("StudentProfileId");
 
-                    b.ToTable("ElectiveSubject");
+                    b.ToTable("Electives");
                 });
 
-            modelBuilder.Entity("EXAMINATION.Models.Entities.StudentProfile", b =>
+            modelBuilder.Entity("EXAMINATION.Models.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("StudentProfileId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentProfileId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("EXAMINATION.Models.Result", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Grade")
+                        .HasColumnType("text");
+
+                    b.Property<double>("MarksObtained")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("PublishedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentProfileId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("StudentProfileId");
+
+                    b.ToTable("Results");
+                });
+
+            modelBuilder.Entity("EXAMINATION.Models.Semester", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Fee")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProgramId");
+
+                    b.ToTable("Semesters");
+                });
+
+            modelBuilder.Entity("EXAMINATION.Models.StudentProfile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -151,6 +280,7 @@ namespace EXAMINATION.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Signature")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("UserId")
@@ -166,117 +296,6 @@ namespace EXAMINATION.Migrations
                         .IsUnique();
 
                     b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("EXAMINATION.Models.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("double precision");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("StudentProfileId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("TransactionId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentProfileId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Payment");
-                });
-
-            modelBuilder.Entity("EXAMINATION.Models.Program", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Fee")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Program");
-                });
-
-            modelBuilder.Entity("EXAMINATION.Models.Result", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Grade")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<double>("MarksObtained")
-                        .HasColumnType("double precision");
-
-                    b.Property<DateTime>("PublishedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("StudentProfileId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("StudentProfileId");
-
-                    b.ToTable("Result");
-                });
-
-            modelBuilder.Entity("EXAMINATION.Models.Semester", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Fee")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ProgramId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProgramId");
-
-                    b.ToTable("Semester");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.User", b =>
@@ -303,6 +322,7 @@ namespace EXAMINATION.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("MiddleName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
@@ -313,8 +333,8 @@ namespace EXAMINATION.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PhotoUrl")
-                        .HasColumnType("text");
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -327,12 +347,12 @@ namespace EXAMINATION.Migrations
             modelBuilder.Entity("EXAMINATION.Models.Application", b =>
                 {
                     b.HasOne("EXAMINATION.Models.Semester", "Semester")
-                        .WithMany()
+                        .WithMany("Applications")
                         .HasForeignKey("SemesterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EXAMINATION.Models.Entities.StudentProfile", null)
+                    b.HasOne("EXAMINATION.Models.StudentProfile", null)
                         .WithMany("Applications")
                         .HasForeignKey("StudentProfileId");
 
@@ -350,7 +370,7 @@ namespace EXAMINATION.Migrations
             modelBuilder.Entity("EXAMINATION.Models.Course", b =>
                 {
                     b.HasOne("EXAMINATION.Models.Semester", "Semester")
-                        .WithMany()
+                        .WithMany("Courses")
                         .HasForeignKey("SemesterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -366,7 +386,7 @@ namespace EXAMINATION.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EXAMINATION.Models.Entities.StudentProfile", "StudentProfile")
+                    b.HasOne("EXAMINATION.Models.StudentProfile", "StudentProfile")
                         .WithMany("ElectiveSubjects")
                         .HasForeignKey("StudentProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -377,36 +397,9 @@ namespace EXAMINATION.Migrations
                     b.Navigation("StudentProfile");
                 });
 
-            modelBuilder.Entity("EXAMINATION.Models.Entities.StudentProfile", b =>
-                {
-                    b.HasOne("EXAMINATION.Models.Program", "Program")
-                        .WithMany("Students")
-                        .HasForeignKey("ProgramId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EXAMINATION.Models.Semester", "Semester")
-                        .WithMany()
-                        .HasForeignKey("SemesterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EXAMINATION.Models.User", "User")
-                        .WithOne("StudentProfile")
-                        .HasForeignKey("EXAMINATION.Models.Entities.StudentProfile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Program");
-
-                    b.Navigation("Semester");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("EXAMINATION.Models.Payment", b =>
                 {
-                    b.HasOne("EXAMINATION.Models.Entities.StudentProfile", null)
+                    b.HasOne("EXAMINATION.Models.StudentProfile", null)
                         .WithMany("Payments")
                         .HasForeignKey("StudentProfileId");
 
@@ -422,12 +415,12 @@ namespace EXAMINATION.Migrations
             modelBuilder.Entity("EXAMINATION.Models.Result", b =>
                 {
                     b.HasOne("EXAMINATION.Models.Course", "Course")
-                        .WithMany()
+                        .WithMany("Results")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EXAMINATION.Models.Entities.StudentProfile", "StudentProfile")
+                    b.HasOne("EXAMINATION.Models.StudentProfile", "StudentProfile")
                         .WithMany("Results")
                         .HasForeignKey("StudentProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -440,8 +433,8 @@ namespace EXAMINATION.Migrations
 
             modelBuilder.Entity("EXAMINATION.Models.Semester", b =>
                 {
-                    b.HasOne("EXAMINATION.Models.Program", "Program")
-                        .WithMany()
+                    b.HasOne("EXAMINATION.Models.AcademicProgram", "Program")
+                        .WithMany("Semesters")
                         .HasForeignKey("ProgramId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -449,7 +442,55 @@ namespace EXAMINATION.Migrations
                     b.Navigation("Program");
                 });
 
-            modelBuilder.Entity("EXAMINATION.Models.Entities.StudentProfile", b =>
+            modelBuilder.Entity("EXAMINATION.Models.StudentProfile", b =>
+                {
+                    b.HasOne("EXAMINATION.Models.AcademicProgram", "Program")
+                        .WithMany("Students")
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EXAMINATION.Models.Semester", "Semester")
+                        .WithMany("Students")
+                        .HasForeignKey("SemesterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EXAMINATION.Models.User", "User")
+                        .WithOne("StudentProfile")
+                        .HasForeignKey("EXAMINATION.Models.StudentProfile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Program");
+
+                    b.Navigation("Semester");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EXAMINATION.Models.AcademicProgram", b =>
+                {
+                    b.Navigation("Semesters");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("EXAMINATION.Models.Course", b =>
+                {
+                    b.Navigation("Results");
+                });
+
+            modelBuilder.Entity("EXAMINATION.Models.Semester", b =>
+                {
+                    b.Navigation("Applications");
+
+                    b.Navigation("Courses");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("EXAMINATION.Models.StudentProfile", b =>
                 {
                     b.Navigation("Applications");
 
@@ -458,11 +499,6 @@ namespace EXAMINATION.Migrations
                     b.Navigation("Payments");
 
                     b.Navigation("Results");
-                });
-
-            modelBuilder.Entity("EXAMINATION.Models.Program", b =>
-                {
-                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.User", b =>

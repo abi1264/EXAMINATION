@@ -23,30 +23,33 @@ namespace EXAMINATION.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetSemesterData()
+        public async Task<IActionResult> GetSemesterData()
         {
-            var semesterdata = dbContext.Semesters.ToList();
+            var semesterdata = await dbContext.Semesters.Include(semster => semster.Courses).ToListAsync();
             return Ok(semesterdata);
         }
-
         [HttpGet]
         [Route("{id:int}")]
-        public IActionResult GetSemesterDataBySemesterId(int id)
+        public async Task<IActionResult> GetSemesterDataBySemesterId(int id)
         {
-            var semesterData = dbContext.Semesters.Find(id);
+            var semesterData = await dbContext.Semesters
+                .Include(semester => semester.Courses)
+                .FirstOrDefaultAsync(semester => semester.Id == id);
+
             if (semesterData is null)
             {
                 return NotFound();
-
             }
+
             return Ok(semesterData);
         }
 
+
         [HttpPost]
-        public IActionResult AddSemesterData(Semester addSemesterData)
+        public async Task<IActionResult> AddSemesterData(Semester addSemesterData)
         {
-           
-            dbContext.Semesters.Add(addSemesterData);
+
+            await dbContext.Semesters.AddAsync(addSemesterData);
             dbContext.SaveChanges();
             return Ok(addSemesterData);
         }
@@ -56,25 +59,25 @@ namespace EXAMINATION.Controllers
         [Route("{id:int}")]
         public IActionResult UpdateSemester(int id, SemesterDto updateSemester)
         {
-        var semester = dbContext.Semesters.Find(id);
-        if (semester is null)
-        {
-            return NotFound();
-        }
+            var semester = dbContext.Semesters.Find(id);
+            if (semester is null)
+            {
+                return NotFound();
+            }
 
             SemesterMapper.ApplyPatch(updateSemester, semester);
             dbContext.SaveChanges();
             return Ok(semester);
 
-         }
+        }
 
 
         [HttpDelete]
-         
+
         public IActionResult DeleteSemester(int id)
         {
             var semester = dbContext.Semesters.Find(id);
-            if(semester is null)
+            if (semester is null)
             {
                 return NotFound();
             }
@@ -82,18 +85,18 @@ namespace EXAMINATION.Controllers
             dbContext.SaveChanges();
             return Ok();
 
-            }
+        }
 
     }
 }
 
 
 
-    
-    
-
-        
 
 
-    
+
+
+
+
+
 

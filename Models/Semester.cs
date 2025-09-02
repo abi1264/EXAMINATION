@@ -15,10 +15,10 @@ namespace EXAMINATION.Models
         [Required]
         public int ProgramId { get; set; }
         public AcademicProgram? Program { get; set; } 
-
-       public ICollection<Course>?Courses { get; set; } = new List<Course>();
-       public ICollection<StudentProfile> ?Students { get; set; } = new List<StudentProfile>();
-       public ICollection<Application> ?Applications { get; set; } = new List<Application>();
+    
+       public ICollection<Course> Courses { get; set; } = new List<Course>();
+       public ICollection<StudentProfile> Students { get; set; } = new List<StudentProfile>();
+       public ICollection<Application> Applications { get; set; } = new List<Application>();
     }
 
 }
