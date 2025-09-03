@@ -42,8 +42,15 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddUser(User addUserDto)
     {
+        //check if email already exists
+        var exists = await dbContext.Users.AnyAsync(u => u.Email == addUserDto.Email);
+        if (exists)
+        {
+            return BadRequest("Email already exists!");
+        }
         await dbContext.Users.AddAsync(addUserDto);
-            dbContext.SaveChanges();
+
+            await dbContext.SaveChangesAsync();
             return Ok(addUserDto);
 
     }
@@ -58,8 +65,14 @@ public class UserController : ControllerBase
         {
             return NotFound();
         }
+        //prevent duplicate email
+        if(!string.IsNullOrEmpty(updateUserDto.Email)&&
+                await dbContext.Users.AnyAsync(u=>u.Email==updateUserDto.Email&&u.Id!=id))
+        {
+            return BadRequest("Email already exists");
+        }
         UserMapper.ApplyPatch(updateUserDto,user);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return Ok(user);
 
 
@@ -75,7 +88,7 @@ public class UserController : ControllerBase
             return NotFound();
         }
         dbContext.Users.Remove(user);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return Ok();
     }
 
