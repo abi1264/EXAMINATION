@@ -29,7 +29,7 @@ public class UserController : ControllerBase
     {
 
         var user = await dbContext.Users
-            .Include(Users=>Users.StudentProfile)
+            .Include(Users => Users.StudentProfile)
             .FirstOrDefaultAsync(Users => Users.Id == id);
         if (user is null)
         {
@@ -50,28 +50,28 @@ public class UserController : ControllerBase
         }
         await dbContext.Users.AddAsync(addUserDto);
 
-            await dbContext.SaveChangesAsync();
-            return Ok(addUserDto);
+        await dbContext.SaveChangesAsync();
+        return Ok(addUserDto);
 
     }
 
     [HttpPatch]
     [Route("{id:int}")]
-    public async Task<IActionResult>UpdateUser(int id, UserDto updateUserDto)
+    public async Task<IActionResult> UpdateUser(int id, UserDto updateUserDto)
 
     {
-        var user =await dbContext.Users.Include(u => u.StudentProfile).FirstOrDefaultAsync(u => u.Id == id);
+        var user = await dbContext.Users.Include(u => u.StudentProfile).FirstOrDefaultAsync(u => u.Id == id);
         if (user is null)
         {
             return NotFound();
         }
         //prevent duplicate email
-        if(!string.IsNullOrEmpty(updateUserDto.Email)&&
-                await dbContext.Users.AnyAsync(u=>u.Email==updateUserDto.Email&&u.Id!=id))
+        if (!string.IsNullOrEmpty(updateUserDto.Email) &&
+                await dbContext.Users.AnyAsync(u => u.Email == updateUserDto.Email && u.Id != id))
         {
             return BadRequest("Email already exists");
         }
-        UserMapper.ApplyPatch(updateUserDto,user);
+        UserMapper.ApplyPatch(updateUserDto, user);
         await dbContext.SaveChangesAsync();
         return Ok(user);
 
@@ -79,6 +79,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete]
+    [Route("{id:int}")]
     public async Task<IActionResult> DeleteUser(int id)
 
     {
@@ -87,7 +88,7 @@ public class UserController : ControllerBase
         {
             return NotFound();
         }
-        dbContext.Users.Remove(user);
+       dbContext.Users.Remove(user);
         await dbContext.SaveChangesAsync();
         return Ok();
     }
