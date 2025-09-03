@@ -25,10 +25,12 @@ public class UserController : ControllerBase
     }
     [HttpGet]
     [Route("{id:int}")]
-    public IActionResult GetUserById(int id)
+    public async Task<IActionResult> GetUserById(int id)
     {
 
-        var user = dbContext.Users.Find(id);
+        var user = await dbContext.Users
+            .Include(Users=>Users.StudentProfile)
+            .FirstOrDefaultAsync(Users => Users.Id == id);
         if (user is null)
         {
             return NotFound();
@@ -38,9 +40,9 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult AddUser(User addUserDto)
+    public async Task<IActionResult> AddUser(User addUserDto)
     {
-        dbContext.Users.Add(addUserDto);
+        await dbContext.Users.AddAsync(addUserDto);
             dbContext.SaveChanges();
             return Ok(addUserDto);
 
