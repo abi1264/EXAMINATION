@@ -25,10 +25,12 @@ public class UserController : ControllerBase
     }
     [HttpGet]
     [Route("{id:int}")]
-    public IActionResult GetUserById(int id)
+    public async Task<IActionResult> GetUserById(int id)
     {
 
-        var user = dbContext.Users.Find(id);
+        var user = await dbContext.Users
+            .Include(Users => Users.StudentProfile)
+            .FirstOrDefaultAsync(Users => Users.Id == id);
         if (user is null)
         {
             return NotFound();
@@ -38,32 +40,46 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult AddUser(User addUserDto)
+    public async Task<IActionResult> AddUser(User addUserDto)
     {
-        dbContext.Users.Add(addUserDto);
-            dbContext.SaveChanges();
-            return Ok(addUserDto);
+        //check if email already exists
+        var exists = await dbContext.Users.AnyAsync(u => u.Email == addUserDto.Email);
+        if (exists)
+        {
+            return BadRequest("Email already exists!");
+        }
+        await dbContext.Users.AddAsync(addUserDto);
+
+        await dbContext.SaveChangesAsync();
+        return Ok(addUserDto);
 
     }
 
     [HttpPatch]
     [Route("{id:int}")]
-    public async Task<IActionResult>UpdateUser(int id, UserDto updateUserDto)
+    public async Task<IActionResult> UpdateUser(int id, UserDto updateUserDto)
 
     {
-        var user =await dbContext.Users.Include(u => u.StudentProfile).FirstOrDefaultAsync(u => u.Id == id);
+        var user = await dbContext.Users.Include(u => u.StudentProfile).FirstOrDefaultAsync(u => u.Id == id);
         if (user is null)
         {
             return NotFound();
         }
-        UserMapper.ApplyPatch(updateUserDto,user);
-        dbContext.SaveChanges();
+        //prevent duplicate email
+        if (!string.IsNullOrEmpty(updateUserDto.Email) &&
+                await dbContext.Users.AnyAsync(u => u.Email == updateUserDto.Email && u.Id != id))
+        {
+            return BadRequest("Email already exists");
+        }
+        UserMapper.ApplyPatch(updateUserDto, user);
+        await dbContext.SaveChangesAsync();
         return Ok(user);
 
 
     }
 
     [HttpDelete]
+    [Route("{id:int}")]
     public async Task<IActionResult> DeleteUser(int id)
 
     {
@@ -72,8 +88,8 @@ public class UserController : ControllerBase
         {
             return NotFound();
         }
-        dbContext.Users.Remove(user);
-        dbContext.SaveChanges();
+       dbContext.Users.Remove(user);
+        await dbContext.SaveChangesAsync();
         return Ok();
     }
 
