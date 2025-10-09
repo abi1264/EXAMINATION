@@ -6,6 +6,7 @@ using EXAMINATION.Models;
 using EXAMINATION.Models.Enum;
 using EXAMINATION.Mappers;
 using EXAMINATION.Models.DTO;
+using System.Threading.Tasks;
 
 namespace EXAMINATION.Controllers
 {
@@ -46,6 +47,11 @@ namespace EXAMINATION.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProgramData(AcademicProgram addProgramData)
         {
+            var exists = await dbContext.Programs.AnyAsync(s => s.Name == addProgramData.Name);
+            if (exists)
+            {
+                return BadRequest(new { message = $"Program with name '{addProgramData.Name}' already exists." });
+            }
 
             await dbContext.Programs.AddAsync(addProgramData);
             dbContext.SaveChanges();
@@ -54,22 +60,23 @@ namespace EXAMINATION.Controllers
 
         [HttpPatch]
         [Route("{id:int}")]
-        public IActionResult UpdatePrograms(int id, AcademicProgramDto updateProgramData)
+        public async Task<IActionResult> UpdatePrograms(int id, AcademicProgramDto updateProgramData)
         {
             var program = dbContext.Programs.Find(id);
             if (program is null)
             {
                 return NotFound();
             }
-
+            if (!string.IsNullOrWhiteSpace(updateProgramData.Name) && await dbContext.Programs.AnyAsync(p => p.Name == updateProgramData.Name && p.Id != id))
+            {
+                return BadRequest(new { message = $"Program with name '{updateProgramData.Name}' already exists." });
+            }
             AcademicProgramMapper.ApplyPatch(updateProgramData, program);
             dbContext.Programs.Update(program);
             return Ok(program);
-
-
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteProgram(int id)
         {
             var program = dbContext.Programs.Find(id);

@@ -7,126 +7,81 @@ namespace EXAMINATION.Mappers
     {
         static public void ApplyPatch(UserDto updateUserDto, User user)
         {
-
             if (updateUserDto.FirstName != null)
-            {
                 user.FirstName = updateUserDto.FirstName;
-            }
 
             if (updateUserDto.MiddleName != null)
-            {
                 user.MiddleName = updateUserDto.MiddleName;
-            }
 
             if (updateUserDto.LastName != null)
-            {
                 user.LastName = updateUserDto.LastName;
-            }
 
             if (updateUserDto.Email != null)
-            {
                 user.Email = updateUserDto.Email;
-            }
-            if (updateUserDto.Password != null)
-            {
-                user.Password = updateUserDto.Password;
-            }
-            if (updateUserDto.PhoneNumber != null)
-            {
-                user.PhoneNumber = updateUserDto.PhoneNumber;
-            }
-            if (updateUserDto.PhotoUrl != null)
-            {
 
+            if (updateUserDto.Password != null)
+                user.Password = updateUserDto.Password;
+
+            if (updateUserDto.PhoneNumber != null)
+                user.PhoneNumber = updateUserDto.PhoneNumber;
+
+            if (updateUserDto.PhotoUrl != null)
                 user.PhotoUrl = updateUserDto.PhotoUrl;
-            }
+
             if (updateUserDto.Role != null)
-            {
                 user.Role = updateUserDto.Role.Value;
-            }
 
             user.UpdatedAt = DateTime.UtcNow;
 
-            //For navigeted studentDto
-            if (user.StudentProfile != null)
+            if (user.StudentProfile != null && updateUserDto.StudentProfile != null)
             {
+                var spDto = updateUserDto.StudentProfile;
+                var sp = user.StudentProfile;
 
+                if (spDto.Signature != null)
+                    sp.Signature = spDto.Signature;
 
-                if (updateUserDto.StudentProfile != null)
+                if (spDto.FatherName != null)
+                    sp.FatherName = spDto.FatherName;
+
+                if (spDto.MotherName != null)
+                    sp.MotherName = spDto.MotherName;
+
+                if (spDto.Gender != null)
+                    sp.Gender = spDto.Gender.Value;
+
+                if (spDto.MaritalStatus != null)
+                    sp.MaritalStatus = spDto.MaritalStatus.Value;
+
+                if (spDto.DateOfBirth != null)
                 {
-
-                    if (updateUserDto.StudentProfile.Signature != null)
-                    {
-                        user.StudentProfile.Signature = updateUserDto.StudentProfile.Signature;
-                    }
-
-                    if (updateUserDto.StudentProfile.FatherName != null)
-                    {
-                        user.StudentProfile.FatherName = updateUserDto.StudentProfile.FatherName;
-                    }
-                    if (updateUserDto.StudentProfile.MotherName != null)
-                    {
-
-                        user.StudentProfile.MotherName = updateUserDto.StudentProfile.MotherName;//for reference type just use .Property_name
-                    }
-
-
-                    if (updateUserDto.StudentProfile.Gender != null)
-                    {
-                        user.StudentProfile.Gender = updateUserDto.StudentProfile.Gender.Value;
-
-                    }
-                    if (updateUserDto.StudentProfile.MaritalStatus != null)
-                    {
-                        user.StudentProfile.MaritalStatus = updateUserDto.StudentProfile.MaritalStatus.Value;
-                    }
-
-                    if (updateUserDto.StudentProfile.DateOfBirth != null)
-                    {
-                        user.StudentProfile.DateOfBirth = updateUserDto.StudentProfile.DateOfBirth.Value;
-                    }
-
-                    // Strings
-                    if (updateUserDto.StudentProfile.CollegeName != null)
-                    {
-                        user.StudentProfile.CollegeName = updateUserDto.StudentProfile.CollegeName;
-                    }
-
-                    if (updateUserDto.StudentProfile.CollegeAddress != null)
-                    {
-                        user.StudentProfile.CollegeAddress = updateUserDto.StudentProfile.CollegeAddress;
-                    }
-
-                    // Nullable integers
-                    if (updateUserDto.StudentProfile.ProgramId != null)
-                    {
-                        user.StudentProfile.ProgramId = updateUserDto.StudentProfile.ProgramId.Value;
-                    }
-
-                    if (updateUserDto.StudentProfile.SemesterId != null)
-                    {
-                        user.StudentProfile.SemesterId = updateUserDto.StudentProfile.SemesterId.Value;
-                    }
-
-                    // Collections
-                    if (updateUserDto.StudentProfile.ElectiveSubjects != null)
-                    {
-                        user.StudentProfile.ElectiveSubjects = updateUserDto.StudentProfile.ElectiveSubjects;
-                    }
-
-                    if (updateUserDto.StudentProfile.Applications != null)
-                    {
-                        user.StudentProfile.Applications = updateUserDto.StudentProfile.Applications;
-                    }
-
-                    if (updateUserDto.StudentProfile.Payments != null)
-                    {
-                        user.StudentProfile.Payments = updateUserDto.StudentProfile.Payments;
-                    }
+                    // Ensure UTC before saving
+                    sp.DateOfBirth = DateTime.SpecifyKind(spDto.DateOfBirth.Value, DateTimeKind.Utc);
                 }
+
+                if (spDto.CollegeName != null)
+                    sp.CollegeName = spDto.CollegeName;
+
+                if (spDto.CollegeAddress != null)
+                    sp.CollegeAddress = spDto.CollegeAddress;
+
+                if (spDto.ProgramId != null)
+                    sp.ProgramId = spDto.ProgramId.Value;
+
+                if (spDto.SemesterId != null)
+                    sp.SemesterId = spDto.SemesterId.Value;
+
+                if (spDto.ElectiveSubjects != null)
+                    sp.ElectiveSubjects = spDto.ElectiveSubjects;
+
+                if (spDto.Applications != null)
+                    sp.Applications = spDto.Applications;
+
+                if (spDto.Payments != null)
+                    sp.Payments = spDto.Payments;
             }
         }
-            
+
     }
-        
+
 }
