@@ -22,6 +22,13 @@ namespace EXAMINATION.Models
         [JsonIgnore]
 
         public Semester? Semester { get; set; }
+        [JsonIgnore]
+
+        [Required]
+        public int ProgramId { get; set; }
+
+        public AcademicProgram? Program { get; set; }
+
         public ICollection<Result> Results { get; set; } = new List<Result>();
 
     }
