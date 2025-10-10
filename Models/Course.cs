@@ -23,10 +23,10 @@ namespace EXAMINATION.Models
 
         public Semester? Semester { get; set; }
 
-        
 
 
         public ICollection<Result> Results { get; set; } = new List<Result>();
+        public ICollection<Application> Applications { get; set; } = new List<Application>();
 
     }
 

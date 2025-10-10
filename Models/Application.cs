@@ -15,6 +15,10 @@ namespace EXAMINATION.Models
         public Semester? Semester { get; set; }
         [Required]
         public ExamType ExamType { get; set; }
+
+       
+        public ICollection<Course> Courses { get; set; } = new List<Course>();
+
         [Required]
         public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
