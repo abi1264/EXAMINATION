@@ -20,7 +20,12 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {
-        var allUsers = await dbContext.Users.ToListAsync();
+        var allUsers = await dbContext.Users
+            .Include(Users => Users.StudentProfile)
+            .ThenInclude(StudentProfile => StudentProfile.Program)
+             .Include(Users => Users.StudentProfile)
+        .ThenInclude(StudentProfile => StudentProfile.Semester).
+        ToListAsync();
         return Ok(allUsers);
     }
     [HttpGet]
@@ -30,6 +35,9 @@ public class UserController : ControllerBase
 
         var user = await dbContext.Users
             .Include(Users => Users.StudentProfile)
+            .ThenInclude(StudentProfile=>StudentProfile.Program)
+             .Include(Users => Users.StudentProfile)
+        .ThenInclude(StudentProfile => StudentProfile.Semester)
             .FirstOrDefaultAsync(Users => Users.Id == id);
         if (user is null)
         {

@@ -26,16 +26,19 @@ namespace EXAMINATION.Models
 
         public MaritalStatus MaritalStatus { get; set; }
         [Required]
-        public DateTime DateOfBirth { get; set; }
+        public DateTimeOffset DateOfBirth { get; set; }
         [Required]
 
         public string CollegeName { get; set; } = string.Empty;
         public string CollegeAddress { get; set; } = string.Empty;
         [Required]
         public int ProgramId { get; set; }
-        public AcademicProgram? Program { get; set; }
+
+        
+        public AcademicProgram? Program { get; set; } 
         [Required]
         public int SemesterId { get; set; }
+
         public Semester? Semester { get; set; } 
         public ICollection<ElectiveSubject> ElectiveSubjects { get; set; } = new List<ElectiveSubject>();
 
