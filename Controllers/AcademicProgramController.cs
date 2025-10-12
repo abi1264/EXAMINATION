@@ -33,9 +33,9 @@ namespace EXAMINATION.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public IActionResult GetProgramById(int id)
+        public async Task<IActionResult> GetProgramById(int id)
         {
-            var programData = dbContext.Programs.Find(id);
+            var programData = await dbContext.Programs.Include(program => program.Semesters).FirstOrDefaultAsync(program => program.Id == id);
             if (programData is null)
             {
                 return NotFound();

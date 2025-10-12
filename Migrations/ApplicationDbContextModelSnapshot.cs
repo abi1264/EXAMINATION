@@ -22,6 +22,21 @@ namespace EXAMINATION.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("ApplicationCourse", b =>
+                {
+                    b.Property<int>("ApplicationsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CoursesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ApplicationsId", "CoursesId");
+
+                    b.HasIndex("CoursesId");
+
+                    b.ToTable("ApplicationCourse");
+                });
+
             modelBuilder.Entity("EXAMINATION.Models.AcademicProgram", b =>
                 {
                     b.Property<int>("Id")
@@ -254,7 +269,7 @@ namespace EXAMINATION.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTimeOffset>("DateOfBirth")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FatherName")
@@ -340,6 +355,21 @@ namespace EXAMINATION.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ApplicationCourse", b =>
+                {
+                    b.HasOne("EXAMINATION.Models.Application", null)
+                        .WithMany()
+                        .HasForeignKey("ApplicationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EXAMINATION.Models.Course", null)
+                        .WithMany()
+                        .HasForeignKey("CoursesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EXAMINATION.Models.Application", b =>

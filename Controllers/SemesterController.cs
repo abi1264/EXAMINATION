@@ -26,7 +26,9 @@ namespace EXAMINATION.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSemesterData()
         {
-            var semesterdata = await dbContext.Semesters.Include(semster => semster.Courses).ToListAsync();
+            var semesterdata = await dbContext.Semesters
+                .Include(semster => semster.Courses)
+                .Include(course=>course.Program).ToListAsync();
             return Ok(semesterdata);
         }
 
@@ -36,6 +38,7 @@ namespace EXAMINATION.Controllers
         {
             var semesterData = await dbContext.Semesters
                 .Include(semester => semester.Courses)
+                .Include(course =>course.Program)
                 .FirstOrDefaultAsync(semester => semester.Id == id);
 
             if (semesterData is null)

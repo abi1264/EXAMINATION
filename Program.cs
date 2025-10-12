@@ -39,6 +39,7 @@ builder.Services.AddCors(options =>
 //    });
 
 
+builder.Services.AddHttpClient<KhaltiService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,12 +53,17 @@ app.UseCors("AllowFrontend");  //  calling or applying
 
 
 app.UseHttpsRedirection();
+
+
+var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+Directory.CreateDirectory(uploadsPath);
+
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(builder.Environment.WebRootPath, "uploads")),
+    FileProvider = new PhysicalFileProvider(uploadsPath),
     RequestPath = "/uploads"
 });
+
 
 app.UseAuthorization();
 

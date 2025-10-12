@@ -43,13 +43,25 @@ namespace EXAMINATION.Controllers
 
 
         [HttpPost]
-        public IActionResult AddApplicationData(Application addApplicationData)
+        public async Task<IActionResult>AddApplicationData(ApplicationCreateDto dtoData)
         {
-           
-            dbContext.Applications.Add(addApplicationData);
-            dbContext.SaveChanges();
 
-            return Ok(addApplicationData);
+            var courses = await dbContext.Courses.
+                 Where(c => dtoData.CourseIds.Contains(c.Id))
+                 .ToListAsync();
+
+            var application = new Application
+            {
+                UserId = dtoData.UserId,
+                SemesterId = dtoData.SemesterId,
+                ExamType = dtoData.ExamType,
+                Courses = courses,
+                Status = ApplicationStatus.Pending
+            };
+
+            dbContext.Applications.Add(application);
+            await dbContext.SaveChangesAsync();
+            return Ok(application);
 
         }
         [HttpPatch]
