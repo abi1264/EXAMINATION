@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EXAMINATION.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251009162301_UpdatedTHECOurseModel")]
-    partial class UpdatedTHECOurseModel
+    [Migration("20251012033244_Init-all-tables")]
+    partial class Initalltables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace EXAMINATION.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ApplicationCourse", b =>
+                {
+                    b.Property<int>("ApplicationsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CoursesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ApplicationsId", "CoursesId");
+
+                    b.HasIndex("CoursesId");
+
+                    b.ToTable("ApplicationCourse");
+                });
 
             modelBuilder.Entity("EXAMINATION.Models.AcademicProgram", b =>
                 {
@@ -105,9 +120,6 @@ namespace EXAMINATION.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProgramId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("SemesterId")
                         .HasColumnType("integer");
 
@@ -116,8 +128,6 @@ namespace EXAMINATION.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProgramId");
 
                     b.HasIndex("SemesterId");
 
@@ -262,7 +272,7 @@ namespace EXAMINATION.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTimeOffset>("DateOfBirth")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FatherName")
@@ -350,6 +360,21 @@ namespace EXAMINATION.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ApplicationCourse", b =>
+                {
+                    b.HasOne("EXAMINATION.Models.Application", null)
+                        .WithMany()
+                        .HasForeignKey("ApplicationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EXAMINATION.Models.Course", null)
+                        .WithMany()
+                        .HasForeignKey("CoursesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("EXAMINATION.Models.Application", b =>
                 {
                     b.HasOne("EXAMINATION.Models.Semester", "Semester")
@@ -375,17 +400,11 @@ namespace EXAMINATION.Migrations
 
             modelBuilder.Entity("EXAMINATION.Models.Course", b =>
                 {
-                    b.HasOne("EXAMINATION.Models.AcademicProgram", "Program")
-                        .WithMany()
-                        .HasForeignKey("ProgramId");
-
                     b.HasOne("EXAMINATION.Models.Semester", "Semester")
                         .WithMany("Courses")
                         .HasForeignKey("SemesterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Program");
 
                     b.Navigation("Semester");
                 });

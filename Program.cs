@@ -39,6 +39,7 @@ builder.Services.AddCors(options =>
 //    });
 
 
+builder.Services.AddHttpClient<KhaltiService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -77,7 +77,7 @@ namespace EXAMINATION.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Code = table.Column<string>(type: "text", nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: false),
                     Credit = table.Column<int>(type: "integer", nullable: false),
                     SemesterId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -104,7 +104,7 @@ namespace EXAMINATION.Migrations
                     MotherName = table.Column<string>(type: "text", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
                     MaritalStatus = table.Column<int>(type: "integer", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateOfBirth = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     CollegeName = table.Column<string>(type: "text", nullable: false),
                     CollegeAddress = table.Column<string>(type: "text", nullable: false),
                     ProgramId = table.Column<int>(type: "integer", nullable: false),
@@ -254,6 +254,35 @@ namespace EXAMINATION.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ApplicationCourse",
+                columns: table => new
+                {
+                    ApplicationsId = table.Column<int>(type: "integer", nullable: false),
+                    CoursesId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationCourse", x => new { x.ApplicationsId, x.CoursesId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationCourse_Applications_ApplicationsId",
+                        column: x => x.ApplicationsId,
+                        principalTable: "Applications",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationCourse_Courses_CoursesId",
+                        column: x => x.CoursesId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationCourse_CoursesId",
+                table: "ApplicationCourse",
+                column: "CoursesId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_SemesterId",
                 table: "Applications",
@@ -330,7 +359,7 @@ namespace EXAMINATION.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Applications");
+                name: "ApplicationCourse");
 
             migrationBuilder.DropTable(
                 name: "Electives");
@@ -340,6 +369,9 @@ namespace EXAMINATION.Migrations
 
             migrationBuilder.DropTable(
                 name: "Results");
+
+            migrationBuilder.DropTable(
+                name: "Applications");
 
             migrationBuilder.DropTable(
                 name: "Courses");
