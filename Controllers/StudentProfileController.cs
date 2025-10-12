@@ -22,9 +22,9 @@ namespace EXAMINATION.Controllers
             this.dbContext = dbContext;
         }
         [HttpGet]
-        public IActionResult GetAllStudents()
+        public async Task<IActionResult> GetAllStudents()
         {
-            var allStudents = dbContext.Students.ToList();
+            var allStudents = await dbContext.Students.ToListAsync();
             return Ok(allStudents);
         }
         [HttpGet]

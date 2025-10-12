@@ -23,17 +23,22 @@ namespace EXAMINATION.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCourseData()
+        public async Task <IActionResult> GetCourseData()
         {
-            var courseData = dbContext.Courses.ToList();
+            var courseData = await dbContext.Courses.
+                Include(course=>course.Semester)
+                .ThenInclude(semester=>semester.Program).ToListAsync();
             return Ok(courseData);
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public IActionResult GetCourseData(int id)
+        public async Task<IActionResult>GetCourseData(int id)
         {
-            var courseData = dbContext.Courses.Find(id);
+            var courseData = await dbContext.Courses
+                .Include(course => course.Semester)
+                .ThenInclude(semester=>semester.Program)
+                .FirstOrDefaultAsync(course => course.Id == id);
             if (courseData is null)
             {
                 return NotFound();
