@@ -22,16 +22,30 @@ namespace EXAMINATION.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetApplicationData()
+        public async Task<IActionResult> GetApplicationData()
         {
-            var applicationdata = dbContext.Applications.ToList();
+            var applicationdata = await dbContext.Applications.
+                Include(application=>application.User)
+                .ThenInclude(user=>user.StudentProfile)
+                .Include(application=>application.Semester)
+                .Include(application=>application.Program)
+                .Include(application=>application.Courses)
+                .ToListAsync();
             return Ok(applicationdata);
         }
         [HttpGet]
         [Route("{id:int}")]
-        public IActionResult GetApplicationDataById(int id)
+        public async Task<IActionResult> GetApplicationDataById(int id)
         {
-            var applicationdata = dbContext.Applications.Find(id);
+            var applicationdata =await dbContext.Applications
+                 .Include(application => application.User)
+                .ThenInclude(user => user.StudentProfile)
+                .Include(application => application.Semester)
+                .Include(application => application.Program)
+                .Include(application => application.Courses)
+                .FirstOrDefaultAsync(application => application.Id == id);
+
+
             if (applicationdata is null)
             {
                 return NotFound();
