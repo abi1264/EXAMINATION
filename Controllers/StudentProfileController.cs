@@ -21,19 +21,35 @@ namespace EXAMINATION.Controllers
         {
             this.dbContext = dbContext;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
         {
-            var allStudents = await dbContext.Students.ToListAsync();
+            var allStudents = await dbContext.Students
+            .Include(s => s.User)
+            .Include(s => s.Program)
+            .Include(s => s.Semester)
+            .Select(s => new
+            {
+                FullName = $"{s.User.FirstName} {s.User.MiddleName} {s.User.LastName}",
+                Email = s.User.Email,
+                PhoneNumber = s.User.PhoneNumber,
+                Program = s.Program.Name,
+                Semester = s.Semester.Name,
+                CollegeName = s.CollegeName,
+                StudentId = s.Id
+            })
+            .ToListAsync();
             return Ok(allStudents);
         }
+
         [HttpGet]
         [Route("{id:int}")]
         public IActionResult GetStudentById(int id)
         {
-            
-           var student= dbContext.Students.Find(id);
-            if(student is null)
+
+            var student = dbContext.Students.Find(id);
+            if (student is null)
             {
                 return NotFound();
             }
@@ -61,7 +77,7 @@ namespace EXAMINATION.Controllers
                 CollegeAddress = addStudentDto.CollegeAddress,
 
                 ProgramId = addStudentDto.ProgramId,
-               // Program = addStudentDto.Program,
+                // Program = addStudentDto.Program,
 
                 SemesterId = addStudentDto.SemesterId,
                 //Semester = addStudentDto.Semester,
@@ -94,17 +110,17 @@ namespace EXAMINATION.Controllers
         }
         [HttpDelete]
         public IActionResult DeleteStudent(int id)
-        
-            {
+
+        {
             var student = dbContext.Students.Find(id);
-            if(student is null)
+            if (student is null)
             {
                 return NotFound();
             }
             dbContext.Students.Remove(student);
             dbContext.SaveChanges();
             return Ok();
-            }
+        }
 
     }
 }

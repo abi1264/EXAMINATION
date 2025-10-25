@@ -23,7 +23,7 @@ namespace EXAMINATION.Controllers
             if (!file.ContentType.StartsWith("image/"))
                 return BadRequest("Only image files are allowed.");
 
-            var uploadsFolder = Path.Combine(_env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "uploads");
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
