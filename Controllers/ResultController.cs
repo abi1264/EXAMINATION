@@ -11,7 +11,7 @@ namespace EXAMINATION.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ResultController : Controller
+    public class ResultController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
         public ResultController(ApplicationDbContext dbContext)

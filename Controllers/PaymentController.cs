@@ -6,9 +6,9 @@ using EXAMINATION.Models.DTO;
 
 namespace EXAMINATION.Controllers
 {
-    [Route("api/[Controller]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class PaymentController : Controller
+    public class PaymentController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
         public PaymentController(ApplicationDbContext dbContext)
