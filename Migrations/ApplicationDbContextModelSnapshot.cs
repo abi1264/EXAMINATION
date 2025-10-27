@@ -75,6 +75,9 @@ namespace EXAMINATION.Migrations
                     b.Property<int>("ExamType")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("SemesterId")
                         .HasColumnType("integer");
 
@@ -88,6 +91,8 @@ namespace EXAMINATION.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProgramId");
 
                     b.HasIndex("SemesterId");
 
@@ -374,6 +379,12 @@ namespace EXAMINATION.Migrations
 
             modelBuilder.Entity("EXAMINATION.Models.Application", b =>
                 {
+                    b.HasOne("EXAMINATION.Models.AcademicProgram", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("EXAMINATION.Models.Semester", "Semester")
                         .WithMany("Applications")
                         .HasForeignKey("SemesterId")
@@ -389,6 +400,8 @@ namespace EXAMINATION.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Program");
 
                     b.Navigation("Semester");
 

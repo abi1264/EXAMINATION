@@ -16,7 +16,10 @@ namespace EXAMINATION.Models
         [Required]
         public ExamType ExamType { get; set; }
 
-       
+        [Required]
+        public int ProgramId { get; set; }
+
+       public AcademicProgram? Program { get; set; }
         public ICollection<Course> Courses { get; set; } = new List<Course>();
 
         [Required]

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EXAMINATION.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251012033244_Init-all-tables")]
-    partial class Initalltables
+    [Migration("20251013133825_new")]
+    partial class @new
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,6 +78,9 @@ namespace EXAMINATION.Migrations
                     b.Property<int>("ExamType")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("SemesterId")
                         .HasColumnType("integer");
 
@@ -91,6 +94,8 @@ namespace EXAMINATION.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProgramId");
 
                     b.HasIndex("SemesterId");
 
@@ -377,6 +382,12 @@ namespace EXAMINATION.Migrations
 
             modelBuilder.Entity("EXAMINATION.Models.Application", b =>
                 {
+                    b.HasOne("EXAMINATION.Models.AcademicProgram", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("EXAMINATION.Models.Semester", "Semester")
                         .WithMany("Applications")
                         .HasForeignKey("SemesterId")
@@ -392,6 +403,8 @@ namespace EXAMINATION.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Program");
 
                     b.Navigation("Semester");
 

@@ -1,5 +1,6 @@
 ﻿using EXAMINATION.Data;
 using EXAMINATION.Models;
+using EXAMINATION.Models.Enum;
 using EXAMINATION.Models.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +49,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddUser(User addUserDto)
+    public async Task<IActionResult> AddUser(UserDtoCreate addUserDto)
     {
         //check if email already exists
         var exists = await dbContext.Users.AnyAsync(u => u.Email == addUserDto.Email);
@@ -56,10 +57,54 @@ public class UserController : ControllerBase
         {
             return BadRequest("Email already exists!");
         }
-        await dbContext.Users.AddAsync(addUserDto);
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(addUserDto.Password);
+
+        StudentProfile? studentProfile = null;
+        if (addUserDto.StudentProfile != null)
+        {
+            var dto = addUserDto.StudentProfile;
+            studentProfile = new StudentProfile
+            {
+                Signature = dto.Signature,
+                FatherName = dto.FatherName,
+                MotherName = dto.MotherName,
+                Gender = dto.Gender,
+                MaritalStatus = dto.MaritalStatus,
+                DateOfBirth = dto.DateOfBirth,
+                CollegeName = dto.CollegeName,
+                CollegeAddress = dto.CollegeAddress,
+                ProgramId = dto.ProgramId,
+                SemesterId = dto.SemesterId
+            };
+        }
+
+        var user = new User
+        {
+            FirstName = addUserDto.FirstName,
+            MiddleName = addUserDto.MiddleName,
+            LastName = addUserDto.LastName,
+            Email = addUserDto.Email,
+            Password = hashedPassword,
+            PhoneNumber = addUserDto.PhoneNumber,
+            PhotoUrl = addUserDto.PhotoUrl,
+            Role = addUserDto.Role, // default if null
+            StudentProfile = studentProfile,
+            CreatedAt = DateTime.UtcNow
+        };
+    
+    await dbContext.Users.AddAsync(user);
 
         await dbContext.SaveChangesAsync();
-        return Ok(addUserDto);
+        return Ok(
+        new
+            {
+                user.Id,
+                user.FirstName,
+                user.Email,
+                user.Role,
+                user.CreatedAt
+            }
+        );
 
     }
 

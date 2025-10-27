@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EXAMINATION.Migrations
 {
     /// <inheritdoc />
-    public partial class Initalltables : Migration
+    public partial class @new : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -142,6 +142,7 @@ namespace EXAMINATION.Migrations
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     SemesterId = table.Column<int>(type: "integer", nullable: false),
                     ExamType = table.Column<int>(type: "integer", nullable: false),
+                    ProgramId = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     StudentProfileId = table.Column<int>(type: "integer", nullable: true)
@@ -149,6 +150,12 @@ namespace EXAMINATION.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Applications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Applications_Programs_ProgramId",
+                        column: x => x.ProgramId,
+                        principalTable: "Programs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Applications_Semesters_SemesterId",
                         column: x => x.SemesterId,
@@ -282,6 +289,11 @@ namespace EXAMINATION.Migrations
                 name: "IX_ApplicationCourse_CoursesId",
                 table: "ApplicationCourse",
                 column: "CoursesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Applications_ProgramId",
+                table: "Applications",
+                column: "ProgramId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_SemesterId",

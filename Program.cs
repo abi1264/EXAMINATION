@@ -1,11 +1,14 @@
+using System.Text; //  Needed for Encoding
 using EXAMINATION.Data;
+using EXAMINATION.Services; //  Only if KhaltiService is here
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// -------------------- CONTROLLERS --------------------
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -14,13 +17,15 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// -------------------- SWAGGER --------------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// CORS setup: allow frontend at localhost:3000
+// -------------------- DATABASE --------------------
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// -------------------- CORS --------------------
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -30,31 +35,55 @@ builder.Services.AddCors(options =>
               .AllowCredentials());
 });
 
-////For using the JsonPatchDocument
-//builder.Services.AddControllers()
-//    .AddNewtonsoftJson(options =>
-//    {
-//        options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-//        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-//    });
+// -------------------- JWT AUTH --------------------
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(key)
+    };
+});
 
+builder.Services.AddAuthorization();
+
+// -------------------- OTHER SERVICES --------------------
 builder.Services.AddHttpClient<KhaltiService>();
+
+builder.Services.AddScoped<JwtTokenService>();
+
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// -------------------- MIDDLEWARE PIPELINE --------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowFrontend");  //  calling or applying
-
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 
+//  ORDER MATTERS: UseAuthentication BEFORE Authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
+// -------------------- STATIC FILES --------------------
 var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 Directory.CreateDirectory(uploadsPath);
 
@@ -64,9 +93,7 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/uploads"
 });
 
-
-app.UseAuthorization();
-
+// -------------------- ROUTING --------------------
 app.MapControllers();
 
 app.Run();
