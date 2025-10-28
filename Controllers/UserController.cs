@@ -36,7 +36,7 @@ public class UserController : ControllerBase
 
         var user = await dbContext.Users
             .Include(Users => Users.StudentProfile)
-            .ThenInclude(StudentProfile=>StudentProfile.Program)
+            .ThenInclude(StudentProfile => StudentProfile.Program)
              .Include(Users => Users.StudentProfile)
         .ThenInclude(StudentProfile => StudentProfile.Semester)
             .FirstOrDefaultAsync(Users => Users.Id == id);
@@ -45,7 +45,6 @@ public class UserController : ControllerBase
             return NotFound();
         }
         return Ok(user);
-
     }
 
     [HttpPost]
@@ -91,19 +90,19 @@ public class UserController : ControllerBase
             StudentProfile = studentProfile,
             CreatedAt = DateTime.UtcNow
         };
-    
-    await dbContext.Users.AddAsync(user);
+
+        await dbContext.Users.AddAsync(user);
 
         await dbContext.SaveChangesAsync();
         return Ok(
         new
-            {
-                user.Id,
-                user.FirstName,
-                user.Email,
-                user.Role,
-                user.CreatedAt
-            }
+        {
+            user.Id,
+            user.FirstName,
+            user.Email,
+            user.Role,
+            user.CreatedAt
+        }
         );
 
     }
@@ -136,12 +135,12 @@ public class UserController : ControllerBase
     public async Task<IActionResult> DeleteUser(int id)
 
     {
-        var user =await dbContext.Users.FindAsync(id);
+        var user = await dbContext.Users.FindAsync(id);
         if (user is null)
         {
             return NotFound();
         }
-       dbContext.Users.Remove(user);
+        dbContext.Users.Remove(user);
         await dbContext.SaveChangesAsync();
         return Ok();
     }

@@ -365,4 +365,9 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+# Ignore environment-specific application config
 appsettings.json
+appsettings.*.json
+
+# Ignore all uploaded assets
+uploads/

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace EXAMINATION.Services;
+
 public class JwtTokenService
 {
 	private readonly IConfiguration _config;
@@ -21,12 +22,12 @@ public class JwtTokenService
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));
 
 		var claims = new[]
-		{
-			new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-			new Claim(ClaimTypes.Name, name),
-			new Claim(ClaimTypes.Role, role),
-			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-		};
+			  {
+				new Claim("userId", userId.ToString()),
+				new Claim("name", name),
+				new Claim("role", role),
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+			};
 
 		var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
