@@ -35,7 +35,7 @@ namespace EXAMINATION.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetProgramById(int id)
         {
-            var programData = await dbContext.Programs.Include(program => program.Semesters).FirstOrDefaultAsync(program => program.Id == id);
+            var programData = await dbContext.Programs.Include(program => program.Semesters).ThenInclude(semester=>semester.Courses).FirstOrDefaultAsync(program => program.Id == id);
             if (programData is null)
             {
                 return NotFound();

@@ -25,8 +25,10 @@ namespace EXAMINATION.Models
         public string PhoneNumber { get; set; } = string.Empty;
         public string PhotoUrl = String.Empty;
         public Role Role { get; set; } = Role.Student;
-        public StudentProfile?  StudentProfile { get; set; }
+        public StudentProfile? StudentProfile { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<Application> Applications { get; set; } = new List<Application>();
     }
 }
