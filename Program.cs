@@ -1,6 +1,6 @@
 using System.Text; //  Needed for Encoding
 using EXAMINATION.Data;
-using EXAMINATION.Migrations;
+// using EXAMINATION.Migrations;
 using EXAMINATION.Services; //  Only if KhaltiService is here
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +24,7 @@ builder.Services.AddSwaggerGen();
 
 // -------------------- DATABASE --------------------
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SpendyzeConnection")));
 
 // -------------------- CORS --------------------
 builder.Services.AddCors(options =>
@@ -81,11 +81,11 @@ builder.Services.AddScoped<JwtTokenService>();
 var app = builder.Build();
 
 // -------------------- MIDDLEWARE PIPELINE --------------------
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 
 app.UseCors("AllowFrontend");
 
