@@ -23,7 +23,7 @@ namespace EXAMINATION.Models
         public string Password { get; set; } = string.Empty;
         [Required]
         public string PhoneNumber { get; set; } = string.Empty;
-        public string PhotoUrl = String.Empty;
+        public string PhotoUrl { get; set;} = String.Empty;
         public Role Role { get; set; } = Role.Student;
         public StudentProfile? StudentProfile { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
