@@ -21,7 +21,7 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {
-        var allUsers = await dbContext.Users
+        var allUsers = await dbContext.Users.Where(user => user.Role == Role.Student)
             .Include(Users => Users.StudentProfile)
             .ThenInclude(StudentProfile => StudentProfile.Program)
              .Include(Users => Users.StudentProfile)

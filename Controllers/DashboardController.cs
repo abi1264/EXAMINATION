@@ -44,7 +44,7 @@ namespace EXAMINATION.Controllers
         public async Task<IActionResult> GetStudentsByProgram()
         {
             var studentsByProgram = await _dbcontext.Users
-                .Where(u => u.Role.ToString() =="Student")
+                .Where(u => u.Role == Role.Student)
                 .GroupBy(u => u.StudentProfile.Program.Name)
                 .Select(g => new { Program = g.Key, Count = g.Count() })
                 .ToListAsync();
